@@ -1,0 +1,117 @@
+//Libraries
+const Discord = require("discord.js");
+const opusscript = require("opusscript");
+const YTDL = require("ytdl-core");
+const TOKEN = PRIVATE INFO;
+const PREFIX = "$";
+
+//Screams for the play function
+var audios = [
+    "./audios/audio.mp3",
+    "./audios/audio1.mp3",
+    "./audios/audio2.mp3",
+    "./audios/audio3.mp3",
+
+];
+
+//MEMES for the case meme
+var images = [
+    "https://cdn.discordapp.com/attachments/293129761213906944/405871758860877825/unknown.png",
+];
+
+//Play function
+function play(connection, message) {
+    var server = servers[message.guild.id];
+
+    server.dispatcher = connection.playFile(audios[Math.floor(Math.random() * audios.length)]);
+    server.queue.shift();
+    server.dispatcher.on("end",function() {
+        if (server.queue[0]) play(connection, message);
+        else connection.disconnect();
+    });
+}
+
+var bot = new Discord.Client();
+var servers = {};
+
+//Alert that the Bot is ready
+bot.on("ready", function() {
+    console.log("READY");
+});
+
+bot.on("message", function(message) {
+    if (message.author.equals(bot.user)) return;
+
+    if (!message.content.startsWith(PREFIX)) return; 
+
+    var args = message.content.substring(PREFIX.length).split(" ");
+
+//Commands
+    switch (args [0] .toLowerCase()) {
+
+        case "meme":
+            message.channel.sendFile(images[Math.floor(Math.random() * images.length)]);
+            break;
+        
+        case "fuckyou":
+            message.channel.sendMessage("That's not a nice thing to say,asshole");
+            break;
+
+        case "ping":
+            message.channel.sendMessage("Pong!");
+            break;
+
+        case "pong":
+            message.channel.sendMessage("Ping!");
+            break;
+        
+        case "pung":
+            message.channel.sendMessage("https://learnenglish.britishcouncil.org/en/english-grammar");
+            break;
+            
+        case "help":
+            const embed = new Discord.RichEmbed()
+            .setTitle("==Info/Help==")
+            .setAuthor("Made by CheckRates")
+            .setColor([0, 0, 0])
+            .setDescription("Hello!!! I am Black Bird, your friendly bot for your screaming needs.")
+            .setFooter("Thank you for choosing BlackBirdBot")
+            .setThumbnail("https://i.imgur.com/EbhYCGm.png")  
+            .setTimestamp()
+            .setURL("https://i.ytimg.com/vi/HBuWNsSi8G8/hqdefault.jpg")
+            .addField("Commands",
+            "$Play -- Plays a random audio file.\n$Ping -- Pong!\n$Meme -- Sends a image meme")
+        
+            message.channel.send({embed});
+            break;
+        
+        case "play":
+            if (!message.member.voiceChannel) {
+                message.channel.sendMessage("You must be in a voice channel.");
+                return;
+            }
+
+            if (!servers[message.guild.id]) servers[message.guild.id] = {
+                queue: []
+            };
+
+            var server =  servers[message.guild.id];
+
+           if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection) {
+            play(connection,message);
+           });
+            break;
+
+        
+        
+        
+        
+        default:
+        message.channel.sendMessage("That's not a valid command.");
+    
+    }
+});
+
+
+
+bot.login(TOKEN);
