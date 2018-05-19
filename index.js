@@ -2,7 +2,7 @@
 const Discord = require("discord.js");
 const opusscript = require("opusscript");
 const YTDL = require("ytdl-core");
-const TOKEN = "NDE2NjE3MjI3NTA5MzAxMjQ4.DXRm9g.cuHeFQwY7MbBwTsRd8kOcZpmTPA";
+const TOKEN = "INSERT TOKEN HERE YOU DOFFUS";
 const PREFIX = "$";
 
 //Screams for the play function
